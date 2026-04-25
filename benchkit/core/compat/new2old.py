@@ -62,7 +62,7 @@ Known limitations (important)
   `subprocess.*` directly (or otherwise bypasses `ctx.exec`), wrappers/sharedlibs
   cannot be injected by this compatibility layer.
 - **Fetch arguments must be single-valued** in a legacy cartesian campaign. If a fetch
-  parameter appears in `parameter_space`, it must have exactly one value because
+  parameter appears in `variables`, it must have exactly one value because
   `fetch()` is executed once during `bootstrap()`.
 
 API
@@ -81,13 +81,13 @@ Example
     >>> from benchkit.benches.leveldb import LevelDBBench
     >>> from benchkit.core.compat.new2old import CampaignCartesianProduct
     >>>
-    >>> parameter_space = {
+    >>> variables = {
     ...     "bench_name": ["readrandom", "seekrandom"],
     ...     "nb_threads": [2, 4, 8],
     ... }
     >>> campaign = CampaignCartesianProduct(
     ...     benchmark=LevelDBBench(),
-    ...     parameter_space=parameter_space,
+    ...     variables=variables,
     ...     nb_runs=1,
     ...     duration_s=5,
     ... )
@@ -99,7 +99,7 @@ The new protocol supports a dedicated `fetch()` step which may accept arguments
 such as `parent_dir`, `commit`, `patches`, etc. In a legacy cartesian campaign we
 expect fetch parameters to be fixed (single-valued). Therefore this adapter enforces:
 
-- If a fetch parameter appears in the provided `parameter_space`, it must have exactly
+- If a fetch parameter appears in the provided `variables`, it must have exactly
   one value.
 
 If you want to vary fetch parameters, use the new engine directly rather than the
@@ -352,7 +352,7 @@ class Adapted(BenchmarkOld):
         validate_benchmark(bench=self.benchmark)
 
         fetch_args = _check_fetch_args(benchmark=self.benchmark, parameter_space=args)
-        self._session_fetch = self._stepper.fetch(args=fetch_args, record_dir=record_dir)
+        self._session_fetch = self._stepper.fetch(args=fetch_args)
 
     @property
     def bench_src_path(self) -> Path:
@@ -448,6 +448,7 @@ class Adapted(BenchmarkOld):
             session=self._last_session_build,
             args=run_args,
             duration_s=duration_s,
+            record_dir=record_data_dir,
             ctx_transform=_transform_run_ctx,
         )
         return self._last_session_run.run_result.outputs[-1].stdout

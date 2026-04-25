@@ -6,14 +6,18 @@ from benchkit.core.compat.new2old import CampaignCartesianProduct
 
 
 def main() -> None:
-    parameter_space = {
+    variables = {
         "bench_name": ["readrandom", "seekrandom"],
         "nb_threads": [1, 2, 3, 4],
     }
 
     campaign = CampaignCartesianProduct(
         benchmark=LevelDBBench(),
+<<<<<<< HEAD
         variables=parameter_space,
+=======
+        variables=variables,
+>>>>>>> a8e03a811236a8cd45b75a9b517303985ab3e88e
     )
 
     campaign.run()
