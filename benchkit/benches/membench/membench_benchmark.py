@@ -71,6 +71,22 @@ class MemBenchBench:
         src_dir = ctx.fetch_result.src_dir
         membench_path = src_dir / "membench"
 
+        """
+        # initialize mem file
+        if not platform.comm.isdir("/mnt/mem"):
+            platform.comm.shell(
+                command="mkdir -p /mnt/mem",
+                current_dir=src_dir,
+                output_is_log=True,
+            )
+
+        if not platform.comm.isfile("/mnt/mem/file"):
+            ctx.exec(argv=["touch /mnt/mem/file"],
+                     cwd=src_dir, output_is_log=False)
+
+        ctx.exec(argv=["dd if=/dev/urandom of=/mnt/mem/file bs=100M count=8"],
+                 cwd=src_dir, output_is_log=False)"""
+
         if not platform.comm.isfile(membench_path):
             make(
                 ctx=ctx,
@@ -95,7 +111,7 @@ class MemBenchBench:
 
         run_command = [
             "./membench",
-            f"-file={build_dir / 'workloads' / benchfile_name}",
+            f"-file={build_dir / 'examples' / benchfile_name}",
         ]
 
         exec_out = ctx.exec(

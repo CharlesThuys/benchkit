@@ -9,7 +9,7 @@ from benchkit.core.compat.new2old import CampaignCartesianProduct
 def main() -> None:
     parameter_space = {
         # "example2.txt", "example3.txt" are not running
-        "benchfile_name": ["baseline.txt"]
+        "benchfile_name": ["example1.txt"]
         # workloads/baseline.txt
     }
 
@@ -20,7 +20,7 @@ def main() -> None:
         variables=parameter_space,
         command_wrappers=[taskset_wrap],
         duration_s=5,
-        nb_runs=10
+        nb_runs=2
     )
 
     campaign.run()
